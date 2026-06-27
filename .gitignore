@@ -1,0 +1,5 @@
+tailwindcss
+venv_practico/
+db.sqlite3
+__pycache__/
+*.pyc

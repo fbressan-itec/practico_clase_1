@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'dist/output.css' %}">
+</head>
+<body class="flex flex-col min-h-screen">
+    
+    <nav class="bg-orange-400 text-slate-950 shadow-md border-b border-orange-300 flex justify-between items-center px-4">
+        <div class="flex items-center">
+            <a href="{% url 'home' %}" class="text-xl font-bold tracking-wider my-2">Cochera ElConito</a>
+        </div>
+        <div class="flex items-center space-x-2 md:space-x-2">
+            <a href="{% url 'list_cocheras' %}" class="hover:text-slate-700 transition-colors">Cocheras</a>
+            <a href="{% url 'admin:index' %}" class="hover:text-slate-700 transition-colors">Panel Admin</a>
+        </div>
+    </nav>
+
+    <main class="flex-1">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-gray-900 bg-center text-white border-t border-gray-800">
+        <div class="my-2">
+            <h1 class="text-white text-sm text-center font-bold tracking-wider">@Franco Nicolas Bressan Nadal</h1>
+        </div>
+    </footer>
+</body>
+</html>
