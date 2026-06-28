@@ -4,14 +4,24 @@
     {% block content %}
 
     <div class="container mx-auto p-6">
-    <h2 class="text-2xl font-bold text-slate-800 mb-6">Estado de la Cochera</h2>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-4 mb-6">
+        <h2 class="text-2xl font-bold text-slate-800">Estado de la Cochera</h2>
+        <div class="flex items-center space-x-3 mt-3 sm:mt-0">
+            
+            <a href="{% url 'crear_cochera' %}" class="inline-flex items-center justify-center bg-orange-400 hover:bg-orange-500 text-slate-950 font-bold text-sm py-2 px-4 rounded-xl shadow-sm transition-colors">
+                + Agregar Cochera
+            </a>
+
+        </div>
+    </div>
+
     
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {% for spot in cocheras %}
             <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-sm font-semibold text-gray-500">Espacio</span>
-                    <span class="bg-orange-100 text-orange-800 text-xs font-bold px-2.5 py-0.5 rounded-full">
+                    <span class="bg-orange-200 text-orange-500 text-xs font-bold px-2.5 py-0.5 rounded-full">
                         N° {{ spot.numero }}
                     </span>
                 </div>
@@ -27,10 +37,39 @@
                     <p class="text-sm text-gray-600">
                         <span class="font-medium">Color:</span> {{ spot.vehiculo.color }}
                     </p>
+                    <p class="text-lg font-bold text-slate-900 tracking-wide uppercase">
+                        <span>Estado:</span>
+                        {% if spot.estado == 'LIBRE' %}
+                            <span class="text-green-600">Libre</span>
+                        {% else %}
+                            <span class="text-red-600">Ocupado</span>
+                        {% endif %}
+                    </p>
                 </div>
 
                 <div class="border-t border-gray-100 mt-3 pt-2 text-xs text-gray-400">
-                    <p>Ingreso: {{ spot.entrada|date:"d/m/Y H:i" }}</p>
+                    {% if spot.vehiculo %}
+                        <p>Ingreso: {{ spot.ingreso|date:"d/m/Y H:i" }}</p>
+                    {% else %}
+                        <p>Salida: {{ spot.ingreso|date:"d/m/Y H:i" }}</p>
+                    {% endif %}
+                    <div class="flex items-center gap-2 mt-4 pt-2 border-t border-gray-100">
+                        <a href="{% url 'editar_cochera' spot.id %}" class="flex-1 text-center bg-zinc-400 hover:bg-zinc-300 text-slate-700 font-bold text-xs py-2 px-3 rounded-lg transition-colors">
+                            Editar
+                        </a>
+                        <form action="{% url 'liberar_cochera' spot.id %}" method="POST" class="flex-1">
+                            {% csrf_token %}
+                            <button type="submit" class="w-full text-center bg-green-400 hover:bg-green-500 text-slate-950 font-bold text-xs py-2 px-3 rounded-lg transition-colors shadow-sm cursor-pointer">
+                                Liberar
+                            </button>
+                        </form>
+                    </div>
+                    <div class="flex items-center gap-2 mb-4 pt-2 border-t border-gray-100">
+                        <a href="{% url 'eliminar_cochera' spot.id %}" class="flex-1 text-center bg-red-500 hover:bg-red-600 text-slate-700 font-bold text-xs py-2 px-3 rounded-lg transition-colors">
+                            Eliminar Cochera
+                        </a>
+                    </div>
+
                     {% if spot.responsable %}
                         <p>Atendido por: {{ spot.responsable.username }}</p>
                     {% endif %}
@@ -40,6 +79,7 @@
             <!-- vacio -->
             <div class="col-span-full text-center py-8 text-gray-500">
                 No hay cocheras registradas todavía. ¡Cargá algunas desde el panel de administración!
+            
             </div>
         {% endfor %}
     </div>
